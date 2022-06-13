@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Data.Sqlite;
 
 namespace Diploma
 {
@@ -29,6 +30,10 @@ namespace Diploma
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            using (var connection = new SqliteConnection("Dara Source=D:\\Programchiki\\SQLiite\\DBs\\OnlineSchool.db"))
+            {
+                connection.Open();
+            }
             LectorsTabContent();
         }
 
