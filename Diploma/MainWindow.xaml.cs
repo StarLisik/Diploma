@@ -30,9 +30,16 @@ namespace Diploma
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            using (var connection = new SqliteConnection("Dara Source=D:\\Programchiki\\SQLiite\\DBs\\OnlineSchool.db"))
+            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
             {
                 connection.Open();
+
+                SqliteCommand command = new SqliteCommand();
+                command.Connection = connection;
+                command.ExecuteNonQuery();
+
+                command.CommandText = "INSERT INTO Lectors (Name, Mail, Subject, Hours) VALUES ('Бурмистров Родион Александрович', 'rodion3000000@gmail.com', 'программирование', 45)";
+                command.ExecuteNonQuery();
             }
             LectorsTabContent();
         }
