@@ -21,6 +21,8 @@ namespace Diploma
     /// </summary>
     public partial class MainWindow : Window
     {
+        ListBox lectorsList = new ListBox(); //content of tab
+
         public MainWindow()
         {
             InitializeComponent();
@@ -30,16 +32,26 @@ namespace Diploma
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            string sqlExprssion = "SELECT * FROM Lectors";
+
             using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand();
-                command.Connection = connection;
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            string name = reader.GetString(1);
+                            lectorsList.Items.Add(name);
+                        }
+                    }
+                }
                 command.ExecuteNonQuery();
 
-                command.CommandText = "INSERT INTO Lectors (Name, Mail, Subject, Hours) VALUES ('Бурмистров Родион Александрович', 'rodion3000000@gmail.com', 'программирование', 45)";
-                command.ExecuteNonQuery();
             }
             LectorsTabContent();
         }
@@ -50,12 +62,17 @@ namespace Diploma
             lectorWindow.Show();
         }
 
+        void LectorAdd(string name)
+        {
+
+        }
+
         void LectorsTabContent()
         {
-            ListBox lectorsList = new ListBox(); //content of tab
+            //ListBox lectorsList = new ListBox(); //content of tab
             lectorsList.Name = "Lector";
             lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
-            lectorsList.Items.Add("Тут будут лекторы");
+            //lectorsList.Items.Add("Тут будут лекторы");
 
             Lectors.Content = lectorsList;
 
