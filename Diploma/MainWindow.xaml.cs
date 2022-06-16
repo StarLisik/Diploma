@@ -62,12 +62,6 @@ namespace Diploma
             lectorWindow.Show();
         }
 
-        private void LectorSelect()
-        {
-            lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
-
-        }
-
         void LectorsTabContent()
         {
             lectorsList.Name = "Lector";
