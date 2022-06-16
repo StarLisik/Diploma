@@ -6,26 +6,14 @@
         xmlns:local="clr-namespace:Diploma"
         mc:Ignorable="d"
         Title="LectorWindow" Height="450" Width="800">
-    <Grid x:Name="LectorGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <ListBox x:Name="info">
-            <ListBoxItem Grid.Row="0" Grid.Column="0" x:Uid="00"></ListBoxItem>
-            <ListBoxItem Grid.Row="0" Grid.Column="1" x:Uid="01"></ListBoxItem>
-            <ListBoxItem Grid.Row="1" Grid.Column="0" x:Uid="10"></ListBoxItem>
-            <ListBoxItem Grid.Row="1" Grid.Column="1" x:Uid="00"></ListBoxItem>
-            <ListBoxItem Grid.Row="2" Grid.Column="0" x:Uid="20"></ListBoxItem>
-            <ListBoxItem Grid.Row="2" Grid.Column="1" x:Uid="21"></ListBoxItem>
-            <ListBoxItem Grid.Row="3" Grid.Column="0" x:Uid="30"></ListBoxItem>
-            <ListBoxItem Grid.Row="3" Grid.Column="1" x:Uid="30"></ListBoxItem>
-        </ListBox>
+    <Grid>
+        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Имя" Width="auto" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Почта" Width="auto" Binding="{Binding Mail}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Предмет" Width="auto" Binding="{Binding Subject}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Отработанные часы" Width="auto" Binding="{Binding Hours}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>

@@ -51,7 +51,6 @@ namespace Diploma
                     }
                 }
                 command.ExecuteNonQuery();
-
             }
             LectorsTabContent();
         }
