@@ -56,23 +56,23 @@ namespace Diploma
             LectorsTabContent();
         }
 
-        private void LectorClick()
+        private void LectorClick(string name)
         {
             LectorWindow lectorWindow = new LectorWindow();
+            lectorWindow.name = name;
             lectorWindow.Show();
         }
 
-        void LectorAdd(string name)
+        private void LectorSelect()
         {
+            lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
 
         }
 
         void LectorsTabContent()
         {
-            //ListBox lectorsList = new ListBox(); //content of tab
             lectorsList.Name = "Lector";
             lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
-            //lectorsList.Items.Add("Тут будут лекторы");
 
             Lectors.Content = lectorsList;
 
@@ -83,7 +83,8 @@ namespace Diploma
             var item = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
             if (item != null)
             {
-                LectorClick();
+                string name = (string)lectorsList.SelectedItem;
+                LectorClick(name);
             }
         }
     }

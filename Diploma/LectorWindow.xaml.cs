@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Data.Sqlite;
 
 namespace Diploma
 {
@@ -19,6 +20,7 @@ namespace Diploma
     /// </summary>
     public partial class LectorWindow : Window
     {
+        public string name;
         public LectorWindow()
         {
             InitializeComponent();
@@ -28,7 +30,27 @@ namespace Diploma
 
         private void LectorWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Grid lectorGrid = new Grid();
+            string sqlExprssion = "SELECT * FROM Lectors";
+
+            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            info.Items[0] = "Имя";
+                            info.Items[1] = reader.GetString(1);
+                        }
+                    }
+                }
+                command.ExecuteNonQuery();
+
+            }
         }
     }
 }
