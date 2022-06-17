@@ -32,6 +32,12 @@ namespace Diploma
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            LectorsShow();
+            LectorsTabContent();
+        }
+
+        private void LectorsShow()
+        {
             string sqlExprssion = "SELECT * FROM Lectors";
 
             using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
@@ -52,7 +58,6 @@ namespace Diploma
                 }
                 command.ExecuteNonQuery();
             }
-            LectorsTabContent();
         }
 
         private void LectorClick(string name)
@@ -66,7 +71,9 @@ namespace Diploma
         {
             lectorsList.Name = "Lector";
             lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
-
+            lectorsList.Items.SortDescriptions.Add(
+                new System.ComponentModel.SortDescription("",
+                System.ComponentModel.ListSortDirection.Ascending));
             Lectors.Content = lectorsList;
 
         }
