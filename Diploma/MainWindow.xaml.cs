@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Data.Sqlite;
+using System.Text.RegularExpressions;
 
 namespace Diploma
 {
@@ -22,7 +23,7 @@ namespace Diploma
     public partial class MainWindow : Window
     {
         ListBox lectorsList = new ListBox();
-        ListBox LessonsList = new ListBox();
+        ListBox GroupsList = new ListBox();
 
         public MainWindow()
         {
@@ -35,6 +36,7 @@ namespace Diploma
         {
             LectorsShow();
             LectorsTabContent();
+            GroupsShow();
         }
 
         private void LectorsShow()
@@ -58,6 +60,34 @@ namespace Diploma
                     }
                 }
                 command.ExecuteNonQuery();
+            }
+        }
+
+        private void GroupsShow()
+        {
+            Regex regex = new Regex(@"Group(\w*)", RegexOptions.IgnoreCase);
+            string sqlExpression = "SELECT name FROM sqlite_master WHERE type='table'";
+
+            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        List<string> group = new List<string>();
+                        
+                        while(reader.Read())
+                        {
+                            if (regex.IsMatch(reader.GetString(0)))
+                            {
+                                group.Add(reader.GetString(0));
+                            }
+                        }
+                    }
+                }
             }
         }
 
