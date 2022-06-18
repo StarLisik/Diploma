@@ -21,7 +21,8 @@ namespace Diploma
     /// </summary>
     public partial class MainWindow : Window
     {
-        ListBox lectorsList = new ListBox(); //content of tab
+        ListBox lectorsList = new ListBox();
+        ListBox LessonsList = new ListBox();
 
         public MainWindow()
         {
@@ -67,7 +68,7 @@ namespace Diploma
             lectorWindow.Show();
         }
 
-        void LectorsTabContent()
+        private void LectorsTabContent()
         {
             lectorsList.Name = "Lector";
             lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;

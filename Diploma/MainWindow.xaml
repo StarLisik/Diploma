@@ -13,8 +13,10 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Header="Предстоящие занятия">
-                
+            <TabItem x:Name="Lessons" Header="Предстоящие занятия">
+                <Grid>
+                    
+                </Grid>
             </TabItem>
             <TabItem Header="Группы">
                 
