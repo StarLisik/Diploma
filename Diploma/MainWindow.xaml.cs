@@ -23,7 +23,7 @@ namespace Diploma
     public partial class MainWindow : Window
     {
         ListBox lectorsList = new ListBox();
-        ListBox GroupsList = new ListBox();
+        ListBox groupsList = new ListBox();
 
         public MainWindow()
         {
@@ -37,6 +37,7 @@ namespace Diploma
             LectorsShow();
             LectorsTabContent();
             GroupsShow();
+            GroupsTabContent();
         }
 
         private void LectorsShow()
@@ -67,24 +68,47 @@ namespace Diploma
         {
             Regex regex = new Regex(@"Group(\w*)", RegexOptions.IgnoreCase);
             string sqlExpression = "SELECT name FROM sqlite_master WHERE type='table'";
+            List<string> group = new List<string>();
 
             using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
             {
                 connection.Open();
 
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
+                using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
-                        List<string> group = new List<string>();
-                        
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             if (regex.IsMatch(reader.GetString(0)))
                             {
-                                group.Add(reader.GetString(0));
+                                string name = reader.GetString(0);
+                                group.Add(name);
                             }
+                        }
+                    }
+                }
+
+                command.ExecuteNonQuery();
+            }
+
+            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            {
+                connection.Open();
+                SqliteCommand command;
+
+                foreach (var member in group)
+                {
+                    sqlExpression = $"SELECT * FROM {member}";
+                    command = new SqliteCommand(sqlExpression, connection);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                                groupsList.Items.Add(reader.GetString(0));
                         }
                     }
                 }
@@ -107,6 +131,23 @@ namespace Diploma
                 System.ComponentModel.ListSortDirection.Ascending));
             Lectors.Content = lectorsList;
 
+        }
+
+        private void GroupsTabContent()
+        {
+            groupsList.Name = "Group";
+            groupsList.PreviewMouseUp += GroupsList_PreviewMouseUp;
+            Groups.Content = groupsList;
+        }
+
+        private void GroupsList_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var item = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+
+            if (item != null)
+            {
+                
+            }
         }
 
         private void PlaceholdersListBox_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
