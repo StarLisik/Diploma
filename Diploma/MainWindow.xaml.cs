@@ -122,6 +122,13 @@ namespace Diploma
             lectorWindow.Show();
         }
 
+        private void GroupClick(string name)
+        {
+            GroupWindow groupWindow = new GroupWindow();
+            groupWindow.name = name;
+            groupWindow.Show();
+        }
+
         private void LectorsTabContent()
         {
             lectorsList.Name = "Lector";
@@ -146,7 +153,8 @@ namespace Diploma
 
             if (item != null)
             {
-                
+                string name = (string)groupsList.SelectedItem;
+                GroupClick(name);
             }
         }
 

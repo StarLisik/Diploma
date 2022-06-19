@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="LectorWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="False" FrozenColumnCount="4">
+        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Имя" Width="300" Binding="{Binding Name}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Почта" Width="200" Binding="{Binding Mail}"></DataGridTextColumn>
