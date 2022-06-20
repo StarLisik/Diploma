@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Data.Sqlite;
+using System.Text.RegularExpressions;
 
 namespace Diploma
 {
@@ -23,12 +24,11 @@ namespace Diploma
         public string name;
         public class Group
         {
-            string FIO { get; set; }
-            string BirthDate { get; set; }
-            string StudyGroup { get; set; }
-            string Subject { get; set; }
-            string Mark { get; set; }
-            string Visit { get; set; }
+            public string Name { get; set; }
+            public string FIO { get; set; }
+            public string Subject { get; set; }
+            public float Mark { get; set; }
+            public float Visit { get; set; }
         }
 
         public GroupWindow()
@@ -40,33 +40,66 @@ namespace Diploma
 
         private void GroupWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            string sqlExprssion = $"SELECT * FROM Lectors WHERE Name = '{name}'";
+            Regex regex = new Regex(@"Group(\w*)", RegexOptions.IgnoreCase);
+            string sqlExpression = "SELECT name FROM sqlite_master WHERE type='table'";
+            List<string> group = new List<string>();
 
             using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
-                using (SqliteDataReader reader = command.ExecuteReader())
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
-                        //List<Lector> lectorList = new List<Lector>();
                         while (reader.Read())
                         {
-                            string name = reader.GetString(1);
-                            string mail = reader.GetString(2);
-                            string subject = reader.GetString(3);
-                            int hours = reader.GetInt32(4);
-
-                            //lectorList.Add(new Lector { Name = name, Mail = mail, Subject = subject, Hours = hours });
-
-                            //LectorGrid.ItemsSource = lectorList;
+                            if (regex.IsMatch(reader.GetString(0)))
+                            {
+                                string name = reader.GetString(0);
+                                group.Add(name);
+                            }
                         }
                     }
                 }
-                command.ExecuteNonQuery();
 
+                command.ExecuteNonQuery();
+            }
+
+            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            {
+                connection.Open();
+                SqliteCommand command;
+                List<Group> groupslist = new List<Group>();
+
+                foreach (var member in group)
+                {
+                    sqlExpression = $"SELECT * FROM {member}";
+                    command = new SqliteCommand(sqlExpression, connection);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                if (name == reader.GetString(0))
+                                {
+                                    string groupname = reader.GetString(0);
+                                    string fio = reader.GetString(1);
+                                    string subject = reader.GetString(2);
+                                    float mark = reader.GetFloat(3);
+                                    float visit = reader.GetFloat(4);
+
+                                    groupslist.Add(new Group { Name = groupname, FIO = fio, Subject = subject, Mark = mark, Visit = visit });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                GroupGrid.ItemsSource = groupslist;
             }
         }
     }

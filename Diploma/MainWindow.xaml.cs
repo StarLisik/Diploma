@@ -107,8 +107,8 @@ namespace Diploma
                     {
                         if (reader.HasRows)
                         {
-                            while (reader.Read())
-                                groupsList.Items.Add(reader.GetString(0));
+                            reader.Read();
+                            groupsList.Items.Add(reader.GetString(0));
                         }
                     }
                 }

@@ -56,12 +56,12 @@ namespace Diploma
                         List<Lector> lectorList = new List<Lector>();
                         while (reader.Read())
                         {
-                            string name = reader.GetString(1);
+                            string namee = reader.GetString(1);
                             string mail = reader.GetString(2);
                             string subject = reader.GetString(3);
                             int hours = reader.GetInt32(4);
 
-                            lectorList.Add(new Lector { Name = name, Mail = mail, Subject = subject, Hours = hours });
+                            lectorList.Add(new Lector { Name = namee, Mail = mail, Subject = subject, Hours = hours });
 
                             LectorGrid.ItemsSource = lectorList;
                         }

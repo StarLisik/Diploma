@@ -7,14 +7,13 @@
         mc:Ignorable="d"
         Title="GroupWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="GroupGrid" AutoGenerateColumns="True">
+        <DataGrid x:Name="GroupGrid" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Имя" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Дата рождения" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Группа" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Предмет" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Средняя оценка" Width="auto"></DataGridTextColumn>
-                <DataGridTextColumn Header="Посещаемость" Width="auto"></DataGridTextColumn>
+                <DataGridTextColumn Header="Название группы" Width="auto" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="ФИО" Width="auto" Binding="{Binding FIO}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Предмет" Width="auto" Binding="{Binding Subject}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Средняя оценка" Width="auto" Binding="{Binding Mark}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Посещаемость" Width="auto" Binding="{Binding Visit}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

@@ -19,7 +19,9 @@
                 </Grid>
             </TabItem>
             <TabItem x:Name="Groups" Header="Группы">
-                
+                <Grid>
+                    
+                </Grid>
             </TabItem>
         </TabControl>
 
