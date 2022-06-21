@@ -15,7 +15,14 @@
             </TabItem>
             <TabItem x:Name="Lessons" Header="Предстоящие занятия">
                 <Grid>
-                    
+                    <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата" Width="auto" Binding="{Binding Date}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Предмет" Width="auto" Binding="{Binding Subject}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Лектор" Width="auto" Binding="{Binding Lector}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Группа" Width="auto" Binding="{Binding Group}"></DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Groups" Header="Группы">

@@ -24,6 +24,15 @@ namespace Diploma
     {
         ListBox lectorsList = new ListBox();
         ListBox groupsList = new ListBox();
+        ListBox lessonsList = new ListBox();
+
+        public class Lesson
+        {
+            public string Date { get; set; }
+            public string Subject { get; set; }
+            public string Lector { get; set; }
+            public string Group { get; set; }
+        }
 
         public MainWindow()
         {
@@ -38,6 +47,7 @@ namespace Diploma
             LectorsTabContent();
             GroupsShow();
             GroupsTabContent();
+            LessonsTabConent();
         }
 
         private void LectorsShow()
@@ -115,6 +125,38 @@ namespace Diploma
             }
         }
 
+        private void LessonsShow()
+        {
+            string sqlExpression = "SELECT * FROM Lessons";
+            List<Lesson> lessonslist = new List<Lesson>();
+
+            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            string date = reader.GetString(0);
+                            string subject = reader.GetString(1);
+                            string lector = reader.GetString(2);
+                            string group = reader.GetString(3);
+
+                            lessonslist.Add(new Lesson { Date = date, Subject = subject, Lector = lector, Group = group });
+
+                            LessonsGrid.ItemsSource = lessonslist;
+                        }
+                    }
+                }
+
+                command.ExecuteNonQuery();
+            }
+        }
+
         private void LectorClick(string name)
         {
             LectorWindow lectorWindow = new LectorWindow();
@@ -145,6 +187,12 @@ namespace Diploma
             groupsList.Name = "Group";
             groupsList.PreviewMouseUp += GroupsList_PreviewMouseUp;
             Groups.Content = groupsList;
+        }
+
+        private void LessonsTabConent()
+        {
+            LessonsGrid.Name = "Lesson";
+            LessonsShow();
         }
 
         private void GroupsList_PreviewMouseUp(object sender, MouseButtonEventArgs e)
