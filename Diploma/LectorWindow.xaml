@@ -9,10 +9,10 @@
     <Grid>
         <DataGrid x:Name="LectorGrid" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Имя" Width="300" Binding="{Binding Name}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Почта" Width="200" Binding="{Binding Mail}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Предмет" Width="200" Binding="{Binding Subject}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Отработанные часы" Width="50" Binding="{Binding Hours}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Имя" Width="auto" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Почта" Width="auto" Binding="{Binding Mail}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Предмет" Width="auto" Binding="{Binding Subject}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Отработанные часы" Width="auto" Binding="{Binding Hours}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
