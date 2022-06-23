@@ -7,13 +7,8 @@
         mc:Ignorable="d"
         Title="LectorWindow" Height="450" Width="800">
     <Grid>
-        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Имя" Width="auto" Binding="{Binding Name}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Почта" Width="auto" Binding="{Binding Mail}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Предмет" Width="auto" Binding="{Binding Subject}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Отработанные часы" Width="auto" Binding="{Binding Hours}"></DataGridTextColumn>
-            </DataGrid.Columns>
+        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="True">
+
         </DataGrid>
     </Grid>
 </Window>

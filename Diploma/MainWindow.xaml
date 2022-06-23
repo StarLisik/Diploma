@@ -8,26 +8,30 @@
         Title="Онлайн-школа" Height="450" Width="800">
     <Grid>
         <TabControl>
-            <TabItem x:Name="Lectors" Header="Лекторы">
-                <Grid>
+            <TabItem Header="Лекторы">
+                <StackPanel>
+                    <Grid x:Name="Lectors" Height="271">
+                        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="True">
 
-                </Grid>
+                        </DataGrid>
+                    </Grid>
+                    <Grid Height="134">
+                        <TextBox x:Name="FindText" TextWrapping="Wrap" Text="Введите ФИО лектора" Margin="312,24,298,81"/>
+                        <Button x:Name="FindButton"  Content="Найти" Height="24" Width="78" Click="FindClick" Margin="365,79,351,31"/>
+                        <Button Content="Сбросить" Margin="548,79,0,0" VerticalAlignment="Top" Width="78" Height="24" Click="Cancel"/>
+                    </Grid>
+                </StackPanel>
             </TabItem>
             <TabItem x:Name="Lessons" Header="Предстоящие занятия">
                 <Grid>
-                    <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Дата" Width="auto" Binding="{Binding Date}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Предмет" Width="auto" Binding="{Binding Subject}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Лектор" Width="auto" Binding="{Binding Lector}"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Группа" Width="auto" Binding="{Binding Group}"></DataGridTextColumn>
-                        </DataGrid.Columns>
+                    <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="True">
+
                     </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem x:Name="Groups" Header="Группы">
                 <Grid>
-                    
+
                 </Grid>
             </TabItem>
         </TabControl>
