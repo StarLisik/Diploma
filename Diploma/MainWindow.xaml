@@ -16,21 +16,37 @@
                         </DataGrid>
                     </Grid>
                     <Grid Height="134">
-                        <TextBox x:Name="FindText" TextWrapping="Wrap" Text="Введите ФИО лектора" Margin="312,24,298,81"/>
-                        <Button x:Name="FindButton"  Content="Найти" Height="24" Width="78" Click="FindClick" Margin="365,79,351,31"/>
-                        <Button Content="Сбросить" Margin="548,79,0,0" VerticalAlignment="Top" Width="78" Height="24" Click="Cancel"/>
+                        <TextBox x:Name="LectorName" TextWrapping="Wrap" Text="Введите имя лектора" Margin="312,24,298,81"/>
+                        <Button x:Name="FindLector" Content="Найти" Height="24" Click="FindLectorClick" Margin="358,86,351,24"/>
+                        <Button x:Name="LectorCancel" Content="Сбросить" Margin="633,86,81,24" Height="24" Click="Cancel"/>
                     </Grid>
                 </StackPanel>
             </TabItem>
-            <TabItem x:Name="Lessons" Header="Предстоящие занятия">
-                <Grid>
-                    <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="True">
+            <TabItem Header="Предстоящие занятия">
+                <StackPanel>
+                    <Grid x:Name="Lessons" Height="271">
+                        <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="True">
 
-                    </DataGrid>
-                </Grid>
+                        </DataGrid>
+                    </Grid>
+                    <Grid Height="134" ShowGridLines="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400"></ColumnDefinition>
+                            <ColumnDefinition Width="auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="1" Grid.Row="0" x:Name="StudentFind" Margin="135,26,92,80" TextWrapping="Wrap" Text="Введите имя лектора"/>
+                        <Button Grid.Column="1" Grid.Row="0" x:Name="FindStudent" Content="Найти" Height="24" Click="FindStudentClick"  Margin="186,86,143,24"/>
+                        <Button Grid.Column="1" Grid.Row="0" x:Name="SudentCancel" Content="Сбросить" Margin="319,86,10,24" Height="24" Click="Cancel"/>
+
+                        <Button Grid.Column="0" x:Name="CreateLesson" Grid.Row="0" Content="Создать новый урок" HorizontalAlignment="Left" Margin="126,88,0,0" VerticalAlignment="Top" Height="22" Width="128"/>
+                        <DatePicker Grid.Column="0" x:Name="LessonDate" Grid.Row="0" HorizontalAlignment="Left" Margin="10,27,0,0" Height="25" VerticalAlignment="Top"/>
+                        <ComboBox Grid.Column="0" x:Name="LectorPick" Grid.Row="0" HorizontalAlignment="Left" Margin="130,28,0,0" Height="25" VerticalAlignment="Top" Width="120"/>
+                        <ComboBox Grid.Column="0" x:Name="GroupPick" Grid.Row="0" HorizontalAlignment="Left" Height="24" Margin="270,28,0,0" VerticalAlignment="Top" Width="120"/>
+                    </Grid>
+                </StackPanel>
             </TabItem>
-            <TabItem x:Name="Groups" Header="Группы">
-                <Grid>
+            <TabItem Header="Группы">
+                <Grid x:Name="Groups">
 
                 </Grid>
             </TabItem>

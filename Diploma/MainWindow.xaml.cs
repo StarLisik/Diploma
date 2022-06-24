@@ -22,9 +22,13 @@ namespace Diploma
     /// </summary>
     public partial class MainWindow : Window
     {
-        ListBox lectorsList = new ListBox();
-        ListBox groupsList = new ListBox();
+        //ListBox lectorsList = new ListBox();
+        ListBox groupsListbox = new ListBox();
         //ListBox lessonsList = new ListBox();
+
+        List<Lector> lectorList = new List<Lector>();
+        List<Lesson> lessonslist = new List<Lesson>();
+        List<Group> grouplist = new List<Group>();
 
         public class Lesson
         {
@@ -42,6 +46,14 @@ namespace Diploma
             public string Pending { get; set; }
         }
 
+        public class Group
+        {
+            public string Name { get; set; }
+            public string Subject { get; set; }
+            public float Mark { get; set; }
+            public float Visit { get; set; }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,35 +64,17 @@ namespace Diploma
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             LectorsShow();
-            LectorsTabContent();
+            //LectorsTabContent();
             GroupsShow();
-            GroupsTabContent();
-            LessonsTabConent();
+            LessonsShow();
         }
 
         private void LectorsShow()
         {
-            lectorsList.Items.Clear();
-            //string sqlExprssion = "SELECT * FROM professors";
+            lectorList.Clear();
+            LectorGrid.ItemsSource = null;
+            LectorGrid.Items.Refresh();
 
-            //using (var connection = new SqliteConnection("Data Source=app_db.db"))
-            //{
-            //    connection.Open();
-
-            //    SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
-            //    using (SqliteDataReader reader = command.ExecuteReader())
-            //    {
-            //        if (reader.HasRows)
-            //        {
-            //            while (reader.Read())
-            //            {
-            //                string name = reader.GetString(1);
-            //                lectorsList.Items.Add(name);
-            //            }
-            //        }
-            //    }
-            //    command.ExecuteNonQuery();
-            //}
             string sqlExprssion = @$"SELECT
                                         p.professor_name 'Преподаватель',
                                         p.subject 'Предмет',
@@ -94,7 +88,6 @@ namespace Diploma
             {
                 connection.Open();
 
-                List<Lector> lectorList = new List<Lector>();
                 SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
 
                 using (SqliteDataReader reader = command.ExecuteReader())
@@ -119,57 +112,93 @@ namespace Diploma
 
         private void GroupsShow()
         {
-            Regex regex = new Regex(@"Group(\w*)", RegexOptions.IgnoreCase);
-            string sqlExpression = "SELECT name FROM sqlite_master WHERE type='table'";
-            List<string> group = new List<string>();
-
-            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
             {
                 connection.Open();
 
-                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                string sqlExprssion = "SELECT * FROM groups";
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
                 using (var reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
-                        while (reader.Read())
+                        while(reader.Read())
                         {
-                            if (regex.IsMatch(reader.GetString(0)))
-                            {
-                                string name = reader.GetString(0);
-                                group.Add(name);
-                            }
+                            groupsListbox.Items.Add(reader.GetString(1));
                         }
                     }
                 }
-
-                command.ExecuteNonQuery();
+                Groups.Children.Add(groupsListbox);
+                groupsListbox.PreviewMouseUp += GroupsList_PreviewMouseUp;
             }
 
-            using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
-            {
-                connection.Open();
-                SqliteCommand command;
+            //Regex regex = new Regex(@"Group(\w*)", RegexOptions.IgnoreCase);
 
-                foreach (var member in group)
-                {
-                    sqlExpression = $"SELECT * FROM {member}";
-                    command = new SqliteCommand(sqlExpression, connection);
+            //string sqlExpression = @"SELECT
+            //                            s.student_name 'Студент',
+            //                            p.subject 'Предмет',
+            //                            round(AVG(ls.mark), 2) 'Средняя оценка',
+            //                            ROUND(AVG(ls.visit) * 100, 2) 'Средний % посещаемости'
+            //                        FROM groups g
+            //                        LEFT JOIN students s ON s.group_id = g.id
+            //                        LEFT JOIN lesson_stats ls ON ls.student_id = s.id
+            //                        LEFT JOIN lessons l on ls.lesson_id = l.id
+            //                        LEFT JOIN professors p ON l.professor_id = p.id
+            //                        GROUP BY s.id, subject";
 
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            reader.Read();
-                            groupsList.Items.Add(reader.GetString(0));
-                        }
-                    }
-                }
-            }
+            //using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            //{
+            //    connection.Open();
+
+            //    SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            //    using (var reader = command.ExecuteReader())
+            //    {
+            //        if (reader.HasRows)
+            //        {
+            //            while (reader.Read())
+            //            {
+            //                string name = reader.GetString(0);
+            //                string subject = reader.GetString(1);
+            //                float mark = reader.GetFloat(2);
+            //                float visit = reader.GetFloat(3);
+
+            //                grouplist.Add(new Group { Name = name, Subject = subject, Mark = mark, Visit = visit });
+            //            }
+            //        }
+            //    }
+
+            //    command.ExecuteNonQuery();
+            //}
+
+            //using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+            //{
+            //    connection.Open();
+            //    SqliteCommand command;
+
+            //    foreach (var member in group)
+            //    {
+            //        sqlExpression = $"SELECT * FROM {member}";
+            //        command = new SqliteCommand(sqlExpression, connection);
+
+            //        using (var reader = command.ExecuteReader())
+            //        {
+            //            if (reader.HasRows)
+            //            {
+            //                reader.Read();
+            //                groupsList.Items.Add(reader.GetString(0));
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private void LessonsShow()
         {
+            lessonslist.Clear();
+            LessonsGrid.ItemsSource = null;
+            LessonsGrid.Items.Refresh();
+
             string sqlExpression = @"SELECT l.lesson_date 'Дата урока',
                                             p.subject 'Предмет',
                                             p.professor_name 'Преподаватель',
@@ -179,7 +208,6 @@ namespace Diploma
                                     JOIN groups g ON g.id = l.group_id
                                     ORDER BY 1, 2";
 
-            List<Lesson> lessonslist = new List<Lesson>();
 
             using (var connection = new SqliteConnection("Data Source=app_db.db"))
             {
@@ -198,22 +226,22 @@ namespace Diploma
                             string group = reader.GetString(3);
 
                             lessonslist.Add(new Lesson { Date = date, Subject = subject, Lector = lector, Group = group });
-
-                            LessonsGrid.ItemsSource = lessonslist;
                         }
                     }
+
+                    LessonsGrid.ItemsSource = lessonslist;
                 }
 
                 command.ExecuteNonQuery();
             }
         }
 
-        private void LectorClick(string name)
-        {
-            LectorWindow lectorWindow = new LectorWindow();
-            lectorWindow.name = name;
-            lectorWindow.Show();
-        }
+        //private void LectorClick(string name)
+        //{
+        //    LectorWindow lectorWindow = new LectorWindow();
+        //    lectorWindow.name = name;
+        //    lectorWindow.Show();
+        //}
 
         private void GroupClick(string name)
         {
@@ -222,31 +250,18 @@ namespace Diploma
             groupWindow.Show();
         }
 
-        private void LectorsTabContent()
-        {
-            lectorsList.Name = "Lector";
-            lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
-            lectorsList.Items.SortDescriptions.Add(
-                new System.ComponentModel.SortDescription("",
-                System.ComponentModel.ListSortDirection.Ascending));
-            lectorsList.Margin = new Thickness(0, 0, 0, 141);
-            lectorsList.VerticalAlignment = VerticalAlignment.Top;
-            Lectors.Children.Add(lectorsList);
+        //private void LectorsTabContent()
+        //{
+        //    lectorsList.Name = "Lector";
+        //    lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
+        //    lectorsList.Items.SortDescriptions.Add(
+        //        new System.ComponentModel.SortDescription("",
+        //        System.ComponentModel.ListSortDirection.Ascending));
+        //    lectorsList.Margin = new Thickness(0, 0, 0, 141);
+        //    lectorsList.VerticalAlignment = VerticalAlignment.Top;
+        //    Lectors.Children.Add(lectorsList);
 
-        }
-
-        private void GroupsTabContent()
-        {
-            groupsList.Name = "Group";
-            groupsList.PreviewMouseUp += GroupsList_PreviewMouseUp;
-            Groups.Content = groupsList;
-        }
-
-        private void LessonsTabConent()
-        {
-            LessonsGrid.Name = "Lesson";
-            LessonsShow();
-        }
+        //}
 
         private void GroupsList_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -254,29 +269,86 @@ namespace Diploma
 
             if (item != null)
             {
-                string name = (string)groupsList.SelectedItem;
-                GroupClick(name);
+                //string name = (string)groupsList.SelectedItem;
+                //GroupClick(name);
             }
         }
 
-        private void PlaceholdersListBox_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            var item = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
-            if (item != null)
-            {
-                string name = (string)lectorsList.SelectedItem;
-                LectorClick(name);
-            }
-        }
+        //private void PlaceholdersListBox_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
+        //{
+        //    var item = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
+        //    if (item != null)
+        //    {
+        //        string name = (string)lectorsList.SelectedItem;
+        //        LectorClick(name);
+        //    }
+        //}
 
-        private void FindClick(object sender, RoutedEventArgs e)
+        private void FindLectorClick(object sender, RoutedEventArgs e)
         {
-            lectorsList.Items.Clear();
-            Lectors.Children.Clear();
-            string text = FindText.Text;
+            lectorList.Clear();
+            LectorGrid.ItemsSource = null;
+            LectorGrid.Items.Refresh();
+
+            string text = LectorName.Text;
             Regex regex = new Regex($@"(\w*){text}(\w*)", RegexOptions.IgnoreCase);
 
-            string sqlExpression = "SELECT * FROM professors";
+            string sqlExprssion = @$"SELECT
+                                        p.professor_name 'Преподаватель',
+                                        p.subject 'Предмет',
+	                                    count(CASE WHEN l.finished = 1 THEN l.id END) 'Проведено',
+	                                    count(CASE WHEN l.finished IS NULL OR l.finished = 0 THEN l.id END) 'Предстоит'
+                                    FROM professors p
+                                    JOIN lessons l ON p.id = l.professor_id
+                                    GROUP BY p.id";
+
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (regex.IsMatch(reader.GetString(0)))
+                            {
+                                string namee = reader.GetString(0);
+                                string subject = reader.GetString(1);
+                                string done = reader.GetString(2);
+                                string pending = reader.GetString(3);
+
+                                lectorList.Add(new Lector { Name = namee, Subject = subject, Done = done, Pending = pending });
+                            }
+                        }
+                    }
+                }
+                command.ExecuteNonQuery();
+                LectorGrid.ItemsSource = lectorList;
+            }
+        }
+
+        private void FindStudentClick(object sender, RoutedEventArgs e)
+        {
+            lessonslist.Clear();
+            LessonsGrid.ItemsSource = null;
+            LessonsGrid.Items.Refresh();
+
+            string text = StudentFind.Text;
+            Regex regex = new Regex($@"(\w*){text}(\w*)", RegexOptions.IgnoreCase);
+
+            string sqlExpression = @"SELECT l.lesson_date 'Дата урока',
+                                            p.subject 'Предмет',
+                                            p.professor_name 'Преподаватель',
+                                            g.group_name 'Группа'
+                                    FROM lessons l
+                                    JOIN professors p ON p.id = l.professor_id
+                                    JOIN groups g ON g.id = l.group_id
+                                    ORDER BY 1, 2";
+
 
             using (var connection = new SqliteConnection("Data Source=app_db.db"))
             {
@@ -289,13 +361,19 @@ namespace Diploma
                     {
                         while (reader.Read())
                         {
-                            if (regex.IsMatch(reader.GetString(1)))
+                            if (regex.IsMatch(reader.GetString(2)))
                             {
-                                lectorsList.Items.Add(reader.GetString(1));
+                                string date = reader.GetString(0);
+                                string subject = reader.GetString(1);
+                                string lector = reader.GetString(2);
+                                string group = reader.GetString(3);
+
+                                lessonslist.Add(new Lesson { Date = date, Subject = subject, Lector = lector, Group = group });
                             }
                         }
-                        Lectors.Children.Add(lectorsList);
                     }
+
+                    LessonsGrid.ItemsSource = lessonslist;
                 }
 
                 command.ExecuteNonQuery();
@@ -304,7 +382,12 @@ namespace Diploma
 
         private void Cancel(object sender, RoutedEventArgs e)
         {
-            LectorsShow();
+            var button = sender as Button;
+
+            if (button.Name == "LectorCancel")
+                LectorsShow();
+            else if (button.Name == "SudentCancel")
+                LessonsShow();
         }
     }
 }
