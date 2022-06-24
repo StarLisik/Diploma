@@ -133,65 +133,70 @@ namespace Diploma
                 groupsListbox.PreviewMouseUp += GroupsList_PreviewMouseUp;
             }
 
-            //Regex regex = new Regex(@"Group(\w*)", RegexOptions.IgnoreCase);
-
-            //string sqlExpression = @"SELECT
-            //                            s.student_name 'Студент',
-            //                            p.subject 'Предмет',
-            //                            round(AVG(ls.mark), 2) 'Средняя оценка',
-            //                            ROUND(AVG(ls.visit) * 100, 2) 'Средний % посещаемости'
-            //                        FROM groups g
-            //                        LEFT JOIN students s ON s.group_id = g.id
-            //                        LEFT JOIN lesson_stats ls ON ls.student_id = s.id
-            //                        LEFT JOIN lessons l on ls.lesson_id = l.id
-            //                        LEFT JOIN professors p ON l.professor_id = p.id
-            //                        GROUP BY s.id, subject";
-
-            //using (var connection = new SqliteConnection("Data Source=app_db.db"))
-            //{
-            //    connection.Open();
-
-            //    SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-            //    using (var reader = command.ExecuteReader())
-            //    {
-            //        if (reader.HasRows)
-            //        {
-            //            while (reader.Read())
-            //            {
-            //                string name = reader.GetString(0);
-            //                string subject = reader.GetString(1);
-            //                float mark = reader.GetFloat(2);
-            //                float visit = reader.GetFloat(3);
-
-            //                grouplist.Add(new Group { Name = name, Subject = subject, Mark = mark, Visit = visit });
-            //            }
-            //        }
-            //    }
-
-            //    command.ExecuteNonQuery();
-            //}
-
-            //using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
-            //{
-            //    connection.Open();
-            //    SqliteCommand command;
-
-            //    foreach (var member in group)
-            //    {
-            //        sqlExpression = $"SELECT * FROM {member}";
-            //        command = new SqliteCommand(sqlExpression, connection);
-
-            //        using (var reader = command.ExecuteReader())
-            //        {
-            //            if (reader.HasRows)
-            //            {
-            //                reader.Read();
-            //                groupsList.Items.Add(reader.GetString(0));
-            //            }
-            //        }
-            //    }
-            //}
         }
+
+        private void GroupsGridShow(string name)
+        {
+            string sqlExpression = $@"SELECT
+                                        s.student_name 'Студент',
+                                        p.subject 'Предмет',
+                                        round(AVG(ls.mark), 2) 'Средняя оценка',
+                                        ROUND(AVG(ls.visit) * 100, 2) 'Средний % посещаемости'
+                                    FROM groups g
+                                    LEFT JOIN students s ON s.group_id = g.id
+                                    LEFT JOIN lesson_stats ls ON ls.student_id = s.id
+                                    LEFT JOIN lessons l on ls.lesson_id = l.id
+                                    LEFT JOIN professors p ON l.professor_id = p.id
+                                    WHERE g.group_name = '{name}'
+                                    GROUP BY s.id, subject";
+
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            string namee = reader.GetString(0);
+                            string subject = reader.GetString(1);
+                            float mark = reader.GetFloat(2);
+                            float visit = reader.GetFloat(3);
+
+                            grouplist.Add(new Group { Name = namee, Subject = subject, Mark = mark, Visit = visit });
+                        }
+                    }
+                }
+                GroupsGrid.ItemsSource = grouplist;
+                groupsListbox.Visibility = Visibility.Collapsed;
+                GroupsGrid.Visibility = Visibility.Visible;
+                command.ExecuteNonQuery();
+            }
+        }
+
+        //using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
+        //{
+        //    connection.Open();
+        //    SqliteCommand command;
+
+        //    foreach (var member in group)
+        //    {
+        //        sqlExpression = $"SELECT * FROM {member}";
+        //        command = new SqliteCommand(sqlExpression, connection);
+
+        //        using (var reader = command.ExecuteReader())
+        //        {
+        //            if (reader.HasRows)
+        //            {
+        //                reader.Read();
+        //                groupsList.Items.Add(reader.GetString(0));
+        //            }
+        //        }
+        //    }
+        //}
 
         private void LessonsShow()
         {
@@ -269,8 +274,8 @@ namespace Diploma
 
             if (item != null)
             {
-                //string name = (string)groupsList.SelectedItem;
-                //GroupClick(name);
+                string name = (string)groupsListbox.SelectedItem;
+                GroupsGridShow(name);
             }
         }
 

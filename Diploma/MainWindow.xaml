@@ -47,7 +47,9 @@
             </TabItem>
             <TabItem Header="Группы">
                 <Grid x:Name="Groups">
-
+                    <DataGrid x:Name="GroupsGrid" Visibility="Collapsed">
+                        
+                    </DataGrid>
                 </Grid>
             </TabItem>
         </TabControl>
