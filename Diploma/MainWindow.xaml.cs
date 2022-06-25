@@ -67,6 +67,7 @@ namespace Diploma
             GroupsShow();
             LessonsShow();
             LectorsChoose();
+            GroupsChoose();
         }
 
         private void LectorsShow()
@@ -373,29 +374,65 @@ namespace Diploma
         private void CreateLesson(object sender, RoutedEventArgs e)
         {
             string lessonsDate = LessonDate.SelectedDate.Value.Date.ToShortDateString();
+            string lector = (string)LectorPick.SelectedItem;
+            string group = (string)GroupPick.SelectedItem;
         }
 
         private void LectorsChoose()
         {
-            string sqlExprssion = "SELECT * FROM professors";
-
-            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            if (LectorPick.Items.Count == 0)
             {
-                connection.Open();
+                string sqlExprssion = "SELECT * FROM professors";
 
-                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
-
-                using (SqliteDataReader reader = command.ExecuteReader())
+                using (var connection = new SqliteConnection("Data Source=app_db.db"))
                 {
-                    if (reader.HasRows)
+                    connection.Open();
+
+                    SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                    using (SqliteDataReader reader = command.ExecuteReader())
                     {
-                        while (reader.Read())
+                        if (reader.HasRows)
                         {
-                            LectorPick.Items.Add(reader.GetString(1));
+                            while (reader.Read())
+                            {
+                                LectorPick.Items.Add(reader.GetString(1));
+                            }
                         }
+
+                        LectorPick.SelectedIndex = 0;
                     }
+                    command.ExecuteNonQuery();
                 }
-                command.ExecuteNonQuery();
+            }
+        }
+
+        private void GroupsChoose()
+        {
+            if (GroupPick.Items.Count == 0)
+            {
+                string sqlExprssion = "SELECT * FROM groups";
+
+                using (var connection = new SqliteConnection("Data Source=app_db.db"))
+                {
+                    connection.Open();
+
+                    SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                    using (SqliteDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                GroupPick.Items.Add(reader.GetString(1));
+                            }
+                        }
+
+                        GroupPick.SelectedIndex = 0;
+                    }
+                    command.ExecuteNonQuery();
+                }
             }
         }
     }
