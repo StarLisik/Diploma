@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="GroupWindow" Height="450" Width="800">
     <Grid>
-
+        <Label x:Name="Date" Content="Дата" HorizontalAlignment="Left" Margin="47,30,0,0" VerticalAlignment="Top" Width="auto"/>
+        <Label x:Name="Subject" Content="Предмет" HorizontalAlignment="Left" Margin="170,30,0,0" VerticalAlignment="Top" Width="auto"/>
+        <Label x:Name="Lector" Content="Лектор" HorizontalAlignment="Left" Margin="341,30,0,0" VerticalAlignment="Top" Width="auto"/>
+        <Label x:Name="Group" Content="Группа" HorizontalAlignment="Left" Margin="517,30,0,0" VerticalAlignment="Top" Width="auto"/>
     </Grid>
 </Window>

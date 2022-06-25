@@ -12,7 +12,11 @@
             <TabItem Header="Лекторы">
                 <StackPanel>
                     <Grid x:Name="Lectors" Height="271">
-                        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="True">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="219*"/>
+                            <ColumnDefinition Width="575*"/>
+                        </Grid.ColumnDefinitions>
+                        <DataGrid x:Name="LectorGrid" AutoGenerateColumns="True" IsReadOnly="True" Grid.ColumnSpan="2">
 
                         </DataGrid>
                     </Grid>
@@ -26,7 +30,7 @@
             <TabItem Header="Предстоящие занятия">
                 <StackPanel>
                     <Grid x:Name="Lessons" Height="271">
-                        <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="True">
+                        <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="True" MouseLeftButtonUp="LessonsGridClick" IsReadOnly="True">
 
                         </DataGrid>
                     </Grid>
@@ -48,7 +52,7 @@
             </TabItem>
             <TabItem Header="Группы">
                 <Grid x:Name="Groups">
-                    <DataGrid x:Name="GroupsGrid" VerticalAlignment="Top" Visibility="Visible" Height="300">
+                    <DataGrid x:Name="GroupsGrid" VerticalAlignment="Top" Visibility="Visible" Height="300" IsReadOnly="True">
 
                     </DataGrid>
                     <Button x:Name="BackButton" Content="Назад" HorizontalAlignment="Center" Margin="0,343,0,0" VerticalAlignment="Top" Height="30" Width="86" Click="BackClick" Visibility="Collapsed"/>

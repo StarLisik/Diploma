@@ -223,17 +223,18 @@ namespace Diploma
 
                     LessonsGrid.ItemsSource = lessonslist;
                 }
-
-                command.ExecuteNonQuery();
             }
         }
 
-        //private void GroupClick(string name)
-        //{
-        //    GroupWindow groupWindow = new GroupWindow();
-        //    groupWindow.name = name;
-        //    groupWindow.Show();
-        //}
+        private void GroupClick(string date, string subject, string lector, string group)
+        {
+            GroupWindow groupWindow = new GroupWindow();
+            groupWindow.groupGrid.Date = date;
+            groupWindow.groupGrid.Subject = subject;
+            groupWindow.groupGrid.Lector = lector;
+            groupWindow.groupGrid.Group = group;
+            groupWindow.Show();
+        }
 
         private void GroupsList_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
@@ -245,16 +246,6 @@ namespace Diploma
                 GroupsGridShow(name);
             }
         }
-
-        //private void PlaceholdersListBox_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    var item = ItemsControl.ContainerFromElement(sender as ListBox, e.OriginalSource as DependencyObject) as ListBoxItem;
-        //    if (item != null)
-        //    {
-        //        string name = (string)lectorsList.SelectedItem;
-        //        LectorClick(name);
-        //    }
-        //}
 
         private void FindLectorClick(object sender, RoutedEventArgs e)
         {
@@ -376,6 +367,60 @@ namespace Diploma
             string lessonsDate = LessonDate.SelectedDate.Value.Date.ToShortDateString();
             string lector = (string)LectorPick.SelectedItem;
             string group = (string)GroupPick.SelectedItem;
+            string lector_id = "";
+            string group_id = "";
+
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                string sqlExprssion = "SELECT * FROM professors";
+
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.GetString(1) == lector)
+                            {
+                                lector_id = reader.GetString(0);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                sqlExprssion = "SELECT * FROM groups";
+
+                command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.GetString(1) == group)
+                            {
+                                group_id = reader.GetString(0);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                sqlExprssion = $@"INSERT INTO lessons (lesson_date, professor_id, group_id)
+                                  VALUES('{lessonsDate}', {lector_id}, {group_id})";
+
+                command = new SqliteCommand(sqlExprssion, connection);
+                command.ExecuteNonQuery();
+
+                LessonsShow();
+                LectorsShow();
+            }
         }
 
         private void LectorsChoose()
@@ -431,9 +476,13 @@ namespace Diploma
 
                         GroupPick.SelectedIndex = 0;
                     }
-                    command.ExecuteNonQuery();
                 }
             }
+        }
+
+        private void LessonsGridClick(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = (Lesson)LessonsGrid.SelectedItem;
         }
     }
 }
