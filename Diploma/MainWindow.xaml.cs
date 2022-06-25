@@ -64,9 +64,9 @@ namespace Diploma
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             LectorsShow();
-            //LectorsTabContent();
             GroupsShow();
             LessonsShow();
+            LectorsChoose();
         }
 
         private void LectorsShow()
@@ -112,6 +112,9 @@ namespace Diploma
 
         private void GroupsShow()
         {
+            groupsListbox.Items.Clear();
+            Groups.Children.Remove(groupsListbox);
+
             using (var connection = new SqliteConnection("Data Source=app_db.db"))
             {
                 connection.Open();
@@ -137,6 +140,9 @@ namespace Diploma
 
         private void GroupsGridShow(string name)
         {
+            grouplist.Clear();
+            GroupsGrid.ItemsSource = null;
+
             string sqlExpression = $@"SELECT
                                         s.student_name 'Студент',
                                         p.subject 'Предмет',
@@ -173,30 +179,10 @@ namespace Diploma
                 GroupsGrid.ItemsSource = grouplist;
                 groupsListbox.Visibility = Visibility.Collapsed;
                 GroupsGrid.Visibility = Visibility.Visible;
+                BackButton.Visibility = Visibility.Visible;
                 command.ExecuteNonQuery();
             }
         }
-
-        //using (var connection = new SqliteConnection("Data Source=OnlineSchool.db"))
-        //{
-        //    connection.Open();
-        //    SqliteCommand command;
-
-        //    foreach (var member in group)
-        //    {
-        //        sqlExpression = $"SELECT * FROM {member}";
-        //        command = new SqliteCommand(sqlExpression, connection);
-
-        //        using (var reader = command.ExecuteReader())
-        //        {
-        //            if (reader.HasRows)
-        //            {
-        //                reader.Read();
-        //                groupsList.Items.Add(reader.GetString(0));
-        //            }
-        //        }
-        //    }
-        //}
 
         private void LessonsShow()
         {
@@ -241,31 +227,11 @@ namespace Diploma
             }
         }
 
-        //private void LectorClick(string name)
+        //private void GroupClick(string name)
         //{
-        //    LectorWindow lectorWindow = new LectorWindow();
-        //    lectorWindow.name = name;
-        //    lectorWindow.Show();
-        //}
-
-        private void GroupClick(string name)
-        {
-            GroupWindow groupWindow = new GroupWindow();
-            groupWindow.name = name;
-            groupWindow.Show();
-        }
-
-        //private void LectorsTabContent()
-        //{
-        //    lectorsList.Name = "Lector";
-        //    lectorsList.PreviewMouseUp += PlaceholdersListBox_OnPreviewMouseUp;
-        //    lectorsList.Items.SortDescriptions.Add(
-        //        new System.ComponentModel.SortDescription("",
-        //        System.ComponentModel.ListSortDirection.Ascending));
-        //    lectorsList.Margin = new Thickness(0, 0, 0, 141);
-        //    lectorsList.VerticalAlignment = VerticalAlignment.Top;
-        //    Lectors.Children.Add(lectorsList);
-
+        //    GroupWindow groupWindow = new GroupWindow();
+        //    groupWindow.name = name;
+        //    groupWindow.Show();
         //}
 
         private void GroupsList_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -393,6 +359,44 @@ namespace Diploma
                 LectorsShow();
             else if (button.Name == "SudentCancel")
                 LessonsShow();
+        }
+
+        private void BackClick(object sender, RoutedEventArgs e)
+        {
+            GroupsGrid.Visibility = Visibility.Collapsed;
+            BackButton.Visibility = Visibility.Collapsed;
+            groupsListbox.Visibility = Visibility.Visible;
+
+            GroupsShow();
+        }
+
+        private void CreateLesson(object sender, RoutedEventArgs e)
+        {
+            string lessonsDate = LessonDate.SelectedDate.Value.Date.ToShortDateString();
+        }
+
+        private void LectorsChoose()
+        {
+            string sqlExprssion = "SELECT * FROM professors";
+
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            LectorPick.Items.Add(reader.GetString(1));
+                        }
+                    }
+                }
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
