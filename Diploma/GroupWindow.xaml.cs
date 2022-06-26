@@ -117,15 +117,37 @@ namespace Diploma
 
                 int visit = selectedItem.Visit;
                 int? mark = selectedItem.Mark;
-                sqlExprssion = @$"UPDATE lesson_stats
-                                SET lesson_stats.visit = {visit},
-                                    lesson_stats.mark = {mark}
-                                WHERE lesson_id = {groupGrid.ID} AND student_id = {studentNameId}";
+                if (mark != null)
+                    sqlExprssion = @$"UPDATE lesson_stats
+                                    SET visit = {visit},
+                                        mark = {mark}
+                                    WHERE lesson_id = {groupGrid.ID} AND student_id = {studentNameId}";
+                else
+                    sqlExprssion = @$"UPDATE lesson_stats
+                                    SET visit = {visit},
+                                        mark = NULL
+                                    WHERE lesson_id = {groupGrid.ID} AND student_id = {studentNameId}";
 
-            
+
 
 
                 command = new SqliteCommand(sqlExprssion, connection);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private void LessonFinished(object sender, RoutedEventArgs e)
+        {
+            int lesson_id = int.Parse(groupGrid.ID);
+            string sqlExprssion = @$"UPDATE lessons
+                                    SET finished = 1
+                                    WHERE id = {lesson_id}";
+
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
                 command.ExecuteNonQuery();
             }
         }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Diploma"
         mc:Ignorable="d"
-        Title="GroupWindow" Height="450" Width="800">
+        Title="Урок" Height="450" Width="800">
     <Grid ShowGridLines="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -19,10 +19,10 @@
         <DataGrid x:Name="CreateLessonGrid" AutoGenerateColumns="False" Grid.Column="1" Margin="0,0,0,130" Width="auto" RowEditEnding="UpdateLessons">
             <DataGrid.Columns>
                 <DataGridTextColumn x:Name="StudentFIO" Header="Имя" Binding="{Binding FIO}" IsReadOnly="True"/>
-                <DataGridCheckBoxColumn x:Name="StudentVisit" Header="Посещаемость" Binding="{Binding Visit}"/>
-                <DataGridTextColumn x:Name="StudentMark" Header="Оценка" Binding="{Binding Mark}"/>
+                <DataGridCheckBoxColumn x:Name="StudentVisit" Header="Посещаемость" Binding="{Binding Visit, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="StudentMark" Header="Оценка" Binding="{Binding Mark, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Grid.Column="1" Content="Обновить" HorizontalAlignment="Center" Margin="0,357,0,0" VerticalAlignment="Top" Height="33" Width="97"/>
+        <Button Grid.Column="1" Content="Завершить урок" HorizontalAlignment="Center" Margin="0,357,0,0" VerticalAlignment="Top" Height="33" Width="97" Click="LessonFinished"/>
     </Grid>
 </Window>
