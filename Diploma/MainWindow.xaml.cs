@@ -107,7 +107,6 @@ namespace Diploma
                         }
                     }
                 }
-                command.ExecuteNonQuery();
                 LectorGrid.ItemsSource = lectorList;
             }
         }
@@ -372,6 +371,7 @@ namespace Diploma
             string group = (string)GroupPick.SelectedItem;
             string lector_id = "";
             string group_id = "";
+            int lesson_id = 0;
 
             using (var connection = new SqliteConnection("Data Source=app_db.db"))
             {
@@ -417,6 +417,30 @@ namespace Diploma
 
                 sqlExprssion = $@"INSERT INTO lessons (lesson_date, professor_id, group_id)
                                   VALUES('{lessonsDate}', {lector_id}, {group_id})";
+
+                command = new SqliteCommand(sqlExprssion, connection);
+                command.ExecuteNonQuery();
+
+                sqlExprssion = @"SELECT id FROM lessons
+                                 ORDER BY 1 desc
+                                 LIMIT 1";
+
+                command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        reader.Read();
+                        lesson_id = int.Parse(reader.GetString(0));
+                    }
+                }
+
+                sqlExprssion = @$"INSERT INTO lesson_stats (lesson_id, student_id, visit)
+                                  SELECT l.id, s.id, 0
+                                  FROM lessons l
+                                  LEFT JOIN students s ON l.group_id = s.group_id
+                                  WHERE l.id = {lesson_id}";
 
                 command = new SqliteCommand(sqlExprssion, connection);
                 command.ExecuteNonQuery();

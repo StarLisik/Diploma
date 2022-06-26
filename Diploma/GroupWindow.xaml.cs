@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Data.Sqlite;
 using System.Text.RegularExpressions;
+using System.Data;
 
 namespace Diploma
 {
@@ -21,7 +22,9 @@ namespace Diploma
     /// </summary>
     public partial class GroupWindow : Window
     {
-        public class GroupGrid
+        List<Student> students = new List<Student>();
+
+        public class GroupList
         {
             public string ID { get; set; }
             public string Date { get; set; }
@@ -32,10 +35,12 @@ namespace Diploma
 
         public class Student
         {
-
+            public string FIO { get; set; }
+            public int Visit { get; set; }
+            public int? Mark { get; set; }
         }
 
-        public GroupGrid groupGrid = new GroupGrid();
+        public GroupList groupGrid = new GroupList();
 
         public GroupWindow()
         {
@@ -50,8 +55,79 @@ namespace Diploma
             Subject.Content = "Предмет: " + groupGrid.Subject;
             Lector.Content = "Лектор: " + groupGrid.Lector;
             Group.Content = "Группа: " + groupGrid.Group;
+
+            GroupDataGridFill();
         }
 
+        private void GroupDataGridFill()
+        {
+            string sqlExprssion = $@"SELECT s.student_name 'Имя ученика', ls.visit 'Посещаемость', ls.mark 'Оценка'
+                                    FROM lesson_stats ls
+                                    JOIN students s ON s.id = ls.student_id
+                                    WHERE ls.lesson_id = {groupGrid.ID}";
 
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            string namee = reader.GetString(0);
+                            int visit = reader.GetInt32(1);
+                            int? mark = reader.IsDBNull(2) ? null : reader.GetInt32(2);
+                            students.Add(new Student { FIO = namee, Visit = visit, Mark = mark });
+                        }
+                    }
+                    CreateLessonGrid.ItemsSource = students;
+                }
+            }
+        }
+
+        private void UpdateLessons(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            var selectedItem = (Student)CreateLessonGrid.SelectedItem;
+            int studentNameId = 0;
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                string sqlExprssion = @$"SELECT * FROM students";
+                SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
+
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.GetString(1) == selectedItem.FIO)
+                            {
+                                studentNameId = reader.GetInt32(0);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                int visit = selectedItem.Visit;
+                int? mark = selectedItem.Mark;
+                sqlExprssion = @$"UPDATE lesson_stats
+                                SET lesson_stats.visit = {visit},
+                                    lesson_stats.mark = {mark}
+                                WHERE lesson_id = {groupGrid.ID} AND student_id = {studentNameId}";
+
+            
+
+
+                command = new SqliteCommand(sqlExprssion, connection);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }
