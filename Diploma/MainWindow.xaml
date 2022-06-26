@@ -30,8 +30,13 @@
             <TabItem Header="Предстоящие занятия">
                 <StackPanel>
                     <Grid x:Name="Lessons" Height="271">
-                        <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="True" MouseLeftButtonUp="LessonsGridClick" IsReadOnly="True">
-
+                        <DataGrid x:Name="LessonsGrid" AutoGenerateColumns="False" MouseLeftButtonUp="LessonsGridClick" IsReadOnly="True">
+                            <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date" Binding="{Binding Date}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Subject" Binding="{Binding Subject}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Lector" Binding="{Binding Lector}"></DataGridTextColumn>
+                            <DataGridTextColumn Header="Group" Binding="{Binding Group}"></DataGridTextColumn>
+                            </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
                     <Grid Height="134" ShowGridLines="True">

@@ -23,10 +23,16 @@ namespace Diploma
     {
         public class GroupGrid
         {
+            public string ID { get; set; }
             public string Date { get; set; }
             public string Subject { get; set; }
             public string Lector { get; set; }
             public string Group { get; set; }
+        }
+
+        public class Student
+        {
+
         }
 
         public GroupGrid groupGrid = new GroupGrid();
@@ -40,7 +46,12 @@ namespace Diploma
 
         private void GroupWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            Date.Content = "Дата: " + groupGrid.Date;
+            Subject.Content = "Предмет: " + groupGrid.Subject;
+            Lector.Content = "Лектор: " + groupGrid.Lector;
+            Group.Content = "Группа: " + groupGrid.Group;
         }
+
+
     }
 }

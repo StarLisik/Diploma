@@ -32,6 +32,7 @@ namespace Diploma
 
         public class Lesson
         {
+            public string ID { get; set; }
             public string Date { get; set; }
             public string Subject { get; set; }
             public string Lector { get; set; }
@@ -191,7 +192,8 @@ namespace Diploma
             LessonsGrid.ItemsSource = null;
             LessonsGrid.Items.Refresh();
 
-            string sqlExpression = @"SELECT l.lesson_date 'Дата урока',
+            string sqlExpression = @"SELECT l.id 'id',
+                                            l.lesson_date 'Дата урока',
                                             p.subject 'Предмет',
                                             p.professor_name 'Преподаватель',
                                             g.group_name 'Группа'
@@ -212,23 +214,24 @@ namespace Diploma
                     {
                         while (reader.Read())
                         {
-                            string date = reader.GetString(0);
-                            string subject = reader.GetString(1);
-                            string lector = reader.GetString(2);
-                            string group = reader.GetString(3);
+                            string id = reader.GetString(0);
+                            string date = reader.GetString(1);
+                            string subject = reader.GetString(2);
+                            string lector = reader.GetString(3);
+                            string group = reader.GetString(4);
 
-                            lessonslist.Add(new Lesson { Date = date, Subject = subject, Lector = lector, Group = group });
+                            lessonslist.Add(new Lesson { ID = id, Date = date, Subject = subject, Lector = lector, Group = group });
                         }
                     }
-
                     LessonsGrid.ItemsSource = lessonslist;
                 }
             }
         }
 
-        private void GroupClick(string date, string subject, string lector, string group)
+        private void GroupClick(string id, string date, string subject, string lector, string group)
         {
             GroupWindow groupWindow = new GroupWindow();
+            groupWindow.groupGrid.ID = id;
             groupWindow.groupGrid.Date = date;
             groupWindow.groupGrid.Subject = subject;
             groupWindow.groupGrid.Lector = lector;
@@ -483,6 +486,8 @@ namespace Diploma
         private void LessonsGridClick(object sender, RoutedEventArgs e)
         {
             var selectedItem = (Lesson)LessonsGrid.SelectedItem;
+
+            GroupClick(selectedItem.ID, selectedItem.Date, selectedItem.Subject, selectedItem.Lector, selectedItem.Group);
         }
     }
 }

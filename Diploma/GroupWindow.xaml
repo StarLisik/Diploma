@@ -6,10 +6,22 @@
         xmlns:local="clr-namespace:Diploma"
         mc:Ignorable="d"
         Title="GroupWindow" Height="450" Width="800">
-    <Grid>
-        <Label x:Name="Date" Content="Дата" HorizontalAlignment="Left" Margin="47,30,0,0" VerticalAlignment="Top" Width="auto"/>
-        <Label x:Name="Subject" Content="Предмет" HorizontalAlignment="Left" Margin="170,30,0,0" VerticalAlignment="Top" Width="auto"/>
-        <Label x:Name="Lector" Content="Лектор" HorizontalAlignment="Left" Margin="341,30,0,0" VerticalAlignment="Top" Width="auto"/>
-        <Label x:Name="Group" Content="Группа" HorizontalAlignment="Left" Margin="517,30,0,0" VerticalAlignment="Top" Width="auto"/>
+    <Grid ShowGridLines="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="0" x:Name="Date" Content="Дата" HorizontalAlignment="Left" Margin="10,30,0,0" VerticalAlignment="Top" Width="auto" FontSize="16"/>
+        <Label Grid.Column="0" x:Name="Subject" Content="Предмет" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Width="auto" FontSize="16"/>
+        <Label Grid.Column="0" x:Name="Lector" Content="Лектор" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Width="auto" FontSize="16"/>
+        <Label Grid.Column="0" x:Name="Group" Content="Группа" HorizontalAlignment="Left" Margin="10,138,0,0" VerticalAlignment="Top" Width="auto" FontSize="16"/>
+
+        <DataGrid x:Name="CreateLessonGrid" AutoGenerateColumns="False" Grid.Column="1" Margin="0,0,0,130" Width="auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="StudentFIO" Header="Имя"/>
+                <DataGridCheckBoxColumn x:Name="StudentVisit" Header="Посещаемость"/>
+                <DataGridTextColumn x:Name="StudentMark" Header="Оценка"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Window>
