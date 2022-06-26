@@ -60,7 +60,7 @@
                     <DataGrid x:Name="GroupsGrid" VerticalAlignment="Top" Visibility="Visible" Height="300" IsReadOnly="True">
 
                     </DataGrid>
-                    <Button x:Name="BackButton" Content="Назад" HorizontalAlignment="Center" Margin="0,343,0,0" VerticalAlignment="Top" Height="30" Width="86" Click="BackClick" Visibility="Collapsed"/>
+                    <Button x:Name="BackButton" Content="Назад" HorizontalAlignment="Center" Margin="0,343,0,0" VerticalAlignment="Top" Height="30" Width="86" Click="BackClick" Visibility="Visible"/>
                 </Grid>
             </TabItem>
         </TabControl>
