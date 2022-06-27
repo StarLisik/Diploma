@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Data.Sqlite;
 using System.Text.RegularExpressions;
+using System.Net;
+using System.Net.Mail;
 
 namespace Diploma
 {
@@ -22,9 +24,8 @@ namespace Diploma
     /// </summary>
     public partial class MainWindow : Window
     {
-        //ListBox lectorsList = new ListBox();
+        string mailName;
         ListBox groupsListbox = new ListBox();
-        //ListBox lessonsList = new ListBox();
 
         List<Lector> lectorList = new List<Lector>();
         List<Lesson> lessonslist = new List<Lesson>();
@@ -181,6 +182,7 @@ namespace Diploma
                 groupsListbox.Visibility = Visibility.Collapsed;
                 GroupsGrid.Visibility = Visibility.Visible;
                 BackButton.Visibility = Visibility.Visible;
+                MailSend.Visibility = Visibility.Visible;
                 command.ExecuteNonQuery();
             }
         }
@@ -245,6 +247,7 @@ namespace Diploma
             if (item != null)
             {
                 string name = (string)groupsListbox.SelectedItem;
+                mailName = name;
                 GroupsGridShow(name);
             }
         }
@@ -512,6 +515,62 @@ namespace Diploma
             var selectedItem = (Lesson)LessonsGrid.SelectedItem;
 
             GroupClick(selectedItem.ID, selectedItem.Date, selectedItem.Subject, selectedItem.Lector, selectedItem.Group);
+        }
+
+        public void MailClick(object sender, RoutedEventArgs e)
+        {
+            string sqlExpression = $@"SELECT
+                                        s.student_name 'Студент',
+                                        p.subject 'Предмет',
+                                        round(AVG(ls.mark), 2) 'Средняя оценка',
+                                        ROUND(AVG(ls.visit) * 100, 2) 'Средний % посещаемости',
+                                        s.email
+                                    FROM groups g
+                                    LEFT JOIN students s ON s.group_id = g.id
+                                    LEFT JOIN lesson_stats ls ON ls.student_id = s.id
+                                    LEFT JOIN lessons l on ls.lesson_id = l.id
+                                    LEFT JOIN professors p ON l.professor_id = p.id
+                                    WHERE g.group_name = '{mailName}'
+                                    GROUP BY s.id, subject";
+
+            using (var connection = new SqliteConnection("Data Source=app_db.db"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            double mail = reader.GetDouble(2);
+                            if(reader.GetDouble(2) <= 3.0)
+                            {
+                                MailAddress from = new MailAddress("rodion3000000@gmail.com", "Rodion");
+
+                                MailAddress to = new MailAddress(reader.GetString(4));
+
+                                MailMessage message = new MailMessage(from, to);
+
+                                message.Subject = "Успевамость";
+
+                                message.Body = $"<h2>Уважаемый ученик, Ваша успеваемость по предмету \"{reader.GetString(1)}\" ниже тройки.</h2>";
+
+                                message.IsBodyHtml = true;
+
+                                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+
+                                smtp.Credentials = new NetworkCredential("rodion3000000@gmail.com", "imzftbuihncnykgk");
+
+                                smtp.EnableSsl = true;
+
+                                smtp.Send(message);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
