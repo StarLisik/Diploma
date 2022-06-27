@@ -150,6 +150,8 @@ namespace Diploma
                 SqliteCommand command = new SqliteCommand(sqlExprssion, connection);
                 command.ExecuteNonQuery();
             }
+
+            Close();
         }
     }
 }

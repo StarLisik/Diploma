@@ -78,7 +78,7 @@ namespace Diploma
             LectorGrid.ItemsSource = null;
             LectorGrid.Items.Refresh();
 
-            string sqlExprssion = @$"SELECT
+                string sqlExprssion = @$"SELECT
                                         p.professor_name 'Преподаватель',
                                         p.subject 'Предмет',
 	                                    count(CASE WHEN l.finished = 1 THEN l.id END) 'Проведено',
@@ -544,7 +544,7 @@ namespace Diploma
                     {
                         while (reader.Read())
                         {
-                            double mail = reader.GetDouble(2);
+                            double mail = reader.GetDouble(2); 
                             if(reader.GetDouble(2) <= 3.0)
                             {
                                 MailAddress from = new MailAddress("rodion3000000@gmail.com", "Rodion");
